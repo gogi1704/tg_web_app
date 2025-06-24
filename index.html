@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Выбор профессии</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
@@ -13,6 +13,7 @@
       width: 100%;
       padding: 8px;
       font-size: 16px;
+      box-sizing: border-box;
     }
     ul {
       list-style: none;
@@ -33,25 +34,22 @@
 </head>
 <body>
   <h2>Введите профессию</h2>
-  <input type="text" id="search" placeholder="например, Слесарь" />
+  <input type="text" id="search" placeholder="например, Слесарь">
   <ul id="suggestions"></ul>
 
   <script>
     const tg = window.Telegram.WebApp;
-    tg.expand();
+    if (tg) tg.expand();
 
-    // Пример данных (можно заменить на загрузку через fetch)
-    const professions = [
-      "Слесарь",
-      "Автослесарь",
-      "Электрик",
-      "Механик",
-      "Водитель",
-      "Инженер",
-      "Врач",
-      "Программист",
-      "Менеджер"
-    ];
+    let professions = [];
+
+    // Загружаем JSON-файл
+    fetch("professions.json")
+      .then(res => res.json())
+      .then(data => {
+        professions = data;
+        console.log("✅ Загружено профессий:", professions.length);
+      });
 
     const input = document.getElementById('search');
     const suggestions = document.getElementById('suggestions');
@@ -60,18 +58,18 @@
       const query = input.value.toLowerCase();
       suggestions.innerHTML = '';
 
-      if (query.length < 1) return;
+      if (professions.length === 0 || query.length < 1) return;
 
       const filtered = professions.filter(p =>
         p.toLowerCase().includes(query)
-      );
+      ).slice(0, 10);
 
       filtered.forEach(p => {
         const li = document.createElement('li');
         li.textContent = p;
         li.addEventListener('click', () => {
-          tg.sendData(p); // отправляем выбранную профессию в Telegram
-          tg.close();     // закрываем WebApp
+          tg.sendData(p);
+          tg.close();
         });
         suggestions.appendChild(li);
       });
