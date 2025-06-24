@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Выбор профессии</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    li {
+      padding: 8px;
+      cursor: pointer;
+    }
+    li:hover {
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h2>Введите профессию</h2>
+  <input type="text" id="search" placeholder="например, Слесарь" />
+  <ul id="suggestions"></ul>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // Пример данных (можно заменить на загрузку через fetch)
+    const professions = [
+      "Слесарь",
+      "Автослесарь",
+      "Электрик",
+      "Механик",
+      "Водитель",
+      "Инженер",
+      "Врач",
+      "Программист",
+      "Менеджер"
+    ];
+
+    const input = document.getElementById('search');
+    const suggestions = document.getElementById('suggestions');
+
+    input.addEventListener('input', () => {
+      const query = input.value.toLowerCase();
+      suggestions.innerHTML = '';
+
+      if (query.length < 1) return;
+
+      const filtered = professions.filter(p =>
+        p.toLowerCase().includes(query)
+      );
+
+      filtered.forEach(p => {
+        const li = document.createElement('li');
+        li.textContent = p;
+        li.addEventListener('click', () => {
+          tg.sendData(p); // отправляем выбранную профессию в Telegram
+          tg.close();     // закрываем WebApp
+        });
+        suggestions.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>
