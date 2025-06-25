@@ -67,6 +67,8 @@
       filtered.forEach(p => {
         const li = document.createElement('li');
         li.textContent = p;
+        console.log("LOOOOOOG_tg.initDataUnsafe:", tg.initDataUnsafe);
+        console.log("LOOOOOOG_tg.initData:", tg.initData);
         li.addEventListener('click', () => {
           alert("Вы выбрали: " + p);           // 1. Покажет, сработал ли JS
           console.log("sendData:", p);         // 2. Покажет в консоли
