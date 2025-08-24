@@ -23,10 +23,16 @@
     }
 
     h2 {
-      margin-top: 1px;
       font-size: 56px;
+      margin-top: 20px;
       margin-bottom: 1rem;
       color: #e0e0e0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Когда на input фокус, скрываем заголовок */
+    .hide-header h2 {
+      display: none;
     }
 
     input {
@@ -115,6 +121,15 @@
         });
         suggestions.appendChild(li);
       });
+    });
+
+    // === Скрываем заголовок при фокусе ===
+    input.addEventListener('focus', () => {
+      document.body.classList.add('hide-header');
+    });
+
+    input.addEventListener('blur', () => {
+      document.body.classList.remove('hide-header');
     });
   </script>
 </body>
